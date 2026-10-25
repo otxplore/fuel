@@ -1,0 +1,729 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111318">
+<meta name="description" content="Track fuel fill-ups, mileage, fuel prices, and vehicle running costs with OTXS Fuel Tracker.">
+<title>OTXS Fuel Tracker | Discover and Explore</title>
+<style>
+:root{
+  --bg:#111318;--panel:#191c23;--panel2:#222630;--border:#303541;
+  --text:#f4f5f7;--muted:#a4aab7;--orange:#ff9d32;--yellow:#ffd166;
+  --green:#56d6a0;--red:#ff7777;--radius:16px
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+input,select,button{font:inherit}
+button{cursor:pointer}
+header{border-bottom:1px solid var(--border);padding:16px max(16px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--yellow),var(--orange));color:#191919;font-size:22px;font-weight:950}
+.brand-name{font-weight:900;letter-spacing:.7px}
+.brand-sub{color:var(--muted);font-size:12px}
+header a{color:var(--muted);font-size:13px;text-decoration:none}
+main{max-width:1100px;margin:auto;padding:28px 16px 50px}
+.hero{margin-bottom:24px}
+.eyebrow{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;font-weight:850;color:var(--orange)}
+h1{font-size:clamp(30px,4.5vw,43px);letter-spacing:-1px;line-height:1.15;margin:8px 0}
+h2{font-size:17px;margin:0}
+.hero p{max-width:650px;color:var(--muted);margin:10px 0 0}
+.muted{color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:17px;align-items:start}
+.stack{display:grid;gap:17px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.tag{font-size:10px;font-weight:850;letter-spacing:.5px;color:var(--yellow);background:#30271e;border:1px solid #624a2d;border-radius:20px;padding:5px 9px;white-space:nowrap}
+label{display:block;color:var(--muted);font-size:12px;font-weight:750;margin-bottom:6px}
+input,select{width:100%;min-width:0;background:#11141a;border:1px solid var(--border);border-radius:10px;padding:11px 12px;color:var(--text)}
+input::placeholder{color:#737b8a}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.field{margin-bottom:13px}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+.btn{border:1px solid var(--border);border-radius:10px;padding:10px 13px;background:var(--panel2);color:var(--text);font-weight:750;font-size:13px}
+.btn:hover{filter:brightness(1.12)}
+.btn-primary{background:linear-gradient(135deg,var(--yellow),var(--orange));border-color:transparent;color:#171717}
+.btn-danger{color:var(--red)}
+.btn-small{font-size:11px;padding:6px 8px}
+.full{width:100%}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{padding:15px;border-radius:12px;background:var(--panel2);border:1px solid var(--border);min-width:0}
+.metric-label{font-size:11px;color:var(--muted)}
+.metric-value{font-size:clamp(20px,3vw,27px);font-weight:900;letter-spacing:-.6px;overflow-wrap:anywhere;margin-top:4px}
+.metric-note{font-size:11px;color:var(--muted);margin-top:3px}
+.formula{font-size:11px;color:var(--muted);margin-top:12px}
+.status{font-size:12px;min-height:17px;margin-top:10px;color:var(--muted)}
+.status.success{color:var(--green)}
+.status.error{color:var(--red)}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12px;min-width:620px}
+th,td{padding:11px 9px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+th{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+td{color:var(--text)}
+tbody tr:last-child td{border-bottom:0}
+.empty{border:1px dashed #414753;border-radius:12px;padding:22px 12px;text-align:center;color:var(--muted);font-size:13px}
+.section-note{font-size:12px;color:var(--muted);margin:-6px 0 15px}
+.bar-list{display:grid;gap:13px}
+.bar-row{display:grid;grid-template-columns:75px 1fr 65px;align-items:center;gap:9px;font-size:11px}
+.bar-label{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:8px;border-radius:10px;background:#303541;overflow:hidden}
+.bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--yellow),var(--orange))}
+.bar-value{text-align:right;font-weight:750}
+.vehicle-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.summary-cell{padding:12px;border:1px solid var(--border);border-radius:10px}
+.summary-label{font-size:11px;color:var(--muted)}
+.summary-value{font-size:15px;font-weight:850;margin-top:4px;overflow-wrap:anywhere}
+footer{text-align:center;padding:30px 10px 0;color:var(--muted);font-size:12px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.card{padding:16px}}
+@media(max-width:480px){header{align-items:flex-start}header a{display:none}main{padding:22px 12px 40px}.row{gap:7px}.btn{padding:9px 10px}.metric{padding:12px}}
+@media print{
+ body{background:white;color:#111}
+ header,.hero .eyebrow,.no-print,footer{display:none!important}
+ main{padding:0;max-width:none}.layout{display:block}
+ .card,.metric,.summary-cell{background:white;color:#111;border-color:#ccc;margin-bottom:12px;break-inside:avoid}
+ .metric-label,.metric-note,.muted,.formula,.summary-label{color:#555}
+ th,td{color:#111;border-color:#ddd}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">⛽</div>
+    <div>
+      <div class="brand-name">OTXS <span style="color:var(--orange)">FUEL TRACKER</span></div>
+      <div class="brand-sub">Track every kilometre.</div>
+    </div>
+  </div>
+  <a href="https://otxs.de">← Back to OTXS</a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="eyebrow">OTXS · Vehicle tools</div>
+    <h1>Know your mileage.<br><span style="color:var(--orange)">Understand your costs.</span></h1>
+    <p>Track fuel fill-ups, monitor real-world mileage, and understand what your bike or car costs to run.</p>
+  </section>
+
+  <div class="layout">
+    <div class="stack">
+      <section class="card">
+        <div class="card-head">
+          <h2>Vehicle profile</h2><span class="tag">YOUR VEHICLE</span>
+        </div>
+        <div class="field">
+          <label for="vehicleName">Vehicle name</label>
+          <input id="vehicleName" maxlength="80" placeholder="e.g. My motorcycle">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="vehicleType">Vehicle type</label>
+            <select id="vehicleType">
+              <option>Motorcycle</option><option>Scooter</option><option>Car</option>
+              <option>SUV</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fuelType">Fuel type</label>
+            <select id="fuelType">
+              <option>Petrol</option><option>Diesel</option><option>CNG</option>
+              <option>Electric</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="startOdo">Starting odometer (km)</label>
+            <input id="startOdo" type="number" min="0" step="0.1" placeholder="e.g. 14000">
+          </div>
+          <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency">
+              <option value="INR">INR (₹)</option>
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="NPR">NPR (रु)</option>
+              <option value="AED">AED (د.إ)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary full" type="button" id="saveVehicle">Save vehicle profile</button>
+        <div class="status" id="profileStatus" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Record a fuel fill-up</h2><span class="tag">NEW ENTRY</span>
+        </div>
+        <p class="section-note">For best mileage estimates, record your odometer at each fill-up. Fill the tank to a consistent level where practical.</p>
+        <form id="fuelForm">
+          <div class="row">
+            <div class="field">
+              <label for="fillDate">Date</label>
+              <input id="fillDate" type="date" required>
+            </div>
+            <div class="field">
+              <label for="odometer">Odometer (km)</label>
+              <input id="odometer" type="number" min="0" step="0.1" placeholder="e.g. 14350" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="litres">Fuel added (litres)</label>
+              <input id="litres" type="number" min="0.01" step="0.01" placeholder="e.g. 8.5" required>
+            </div>
+            <div class="field">
+              <label for="price">Price per litre</label>
+              <input id="price" type="number" min="0" step="0.01" placeholder="e.g. 95.50" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="fillAmount">Total paid (optional)</label>
+              <input id="fillAmount" type="number" min="0" step="0.01" placeholder="Auto-calculated">
+            </div>
+            <div class="field">
+              <label for="fillStation">Station / note (optional)</label>
+              <input id="fillStation" maxlength="100" placeholder="e.g. Highway pump">
+            </div>
+          </div>
+          <label class="check-row" style="display:flex;gap:9px;align-items:center;font-size:12px;color:var(--muted);margin-bottom:14px">
+            <input id="fullTank" type="checkbox" checked style="width:17px;height:17px;accent-color:var(--orange)">
+            This was a full-tank fill-up (recommended for mileage tracking)
+          </label>
+          <button class="btn btn-primary full" type="submit">+ Save fuel record</button>
+          <div class="status" id="formStatus" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Fuel history</h2><span class="tag" id="recordCount">0 RECORDS</span>
+        </div>
+        <div class="row no-print" style="margin-bottom:14px">
+          <button class="btn" type="button" id="exportCsv">Export CSV</button>
+          <button class="btn" type="button" id="exportJson">Backup JSON</button>
+          <button class="btn" type="button" id="printBtn">Print report</button>
+        </div>
+        <div id="historyArea"></div>
+      </section>
+    </div>
+
+    <aside class="stack">
+      <section class="card">
+        <div class="card-head"><h2>Running statistics</h2><span class="tag">OVERVIEW</span></div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Average mileage</div>
+            <div class="metric-value" id="avgMileage">—</div>
+            <div class="metric-note">km per litre</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Total fuel spend</div>
+            <div class="metric-value" id="totalSpend">₹0</div>
+            <div class="metric-note">Recorded purchases</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Total fuel added</div>
+            <div class="metric-value" id="totalLitres">0 L</div>
+            <div class="metric-note">Across all records</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Distance tracked</div>
+            <div class="metric-value" id="distanceTracked">—</div>
+            <div class="metric-note">From first to latest record</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Cost per kilometre</div>
+            <div class="metric-value" id="costPerKm">—</div>
+            <div class="metric-note">Fuel cost / tracked distance</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Latest fuel price</div>
+            <div class="metric-value" id="latestPrice">—</div>
+            <div class="metric-note">Per litre</div>
+          </div>
+        </div>
+        <p class="formula">Mileage is estimated from consecutive full-tank records. The first full-tank entry establishes a baseline and has no mileage result of its own.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Fuel price history</h2></div>
+        <div id="priceChart" class="bar-list">
+          <div class="empty">Add fuel records to see prices here.</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Vehicle summary</h2></div>
+        <div class="vehicle-summary">
+          <div class="summary-cell"><div class="summary-label">Vehicle</div><div class="summary-value" id="summaryName">Not set</div></div>
+          <div class="summary-cell"><div class="summary-label">Fuel</div><div class="summary-value" id="summaryFuel">Petrol</div></div>
+          <div class="summary-cell"><div class="summary-label">Latest odometer</div><div class="summary-value" id="summaryOdo">—</div></div>
+          <div class="summary-cell"><div class="summary-label">Fill-ups</div><div class="summary-value" id="summaryFills">0</div></div>
+        </div>
+      </section>
+
+      <section class="card no-print">
+        <div class="card-head"><h2>Data & privacy</h2></div>
+        <p class="muted" style="font-size:12px">Your records stay in this browser. Export a JSON backup regularly if you want to keep a copy or move your data to another device.</p>
+        <label for="importJson">Restore a JSON backup</label>
+        <input type="file" id="importJson" accept=".json,application/json">
+        <button class="btn full" id="importBtn" type="button" style="margin-top:10px">Import backup</button>
+        <div class="status" id="backupStatus" role="status" aria-live="polite"></div>
+        <button class="btn btn-danger full" id="clearBtn" type="button" style="margin-top:12px">Delete all records</button>
+      </section>
+    </aside>
+  </div>
+  <footer>OTXS Fuel Tracker · Discover and Explore · No account required</footer>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY = "otxs_fuel_tracker_v1";
+  const MAX_RECORDS = 5000;
+  const symbols = {INR:"₹",USD:"$",EUR:"€",GBP:"£",NPR:"रु",AED:"د.إ"};
+
+  let state = {
+    profile:{
+      name:"",type:"Motorcycle",fuel:"Petrol",startOdo:"",currency:"INR"
+    },
+    records:[]
+  };
+
+  function setStatus(id,message,type=""){
+    const el=$(id);
+    el.textContent=message;
+    el.className="status"+(type?" "+type:"");
+  }
+
+  function numeric(value){
+    if(value==="" || value===null || value===undefined) return null;
+    const n=Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function validNumber(value,min=0){
+    const n=numeric(value);
+    return n!==null && n>=min;
+  }
+
+  function money(value){
+    if(!Number.isFinite(value)) return "—";
+    const symbol=symbols[state.profile.currency]||state.profile.currency+" ";
+    return symbol+value.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+
+  function number(value,digits=1){
+    if(!Number.isFinite(value)) return "—";
+    return value.toLocaleString(undefined,{maximumFractionDigits:digits});
+  }
+
+  function uid(){
+    return Date.now().toString(36)+Math.random().toString(36).slice(2,9);
+  }
+
+  function today(){
+    const d=new Date();
+    const offset=d.getTimezoneOffset();
+    return new Date(d.getTime()-offset*60000).toISOString().slice(0,10);
+  }
+
+  function loadState(){
+    try{
+      const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+      if(!raw || typeof raw!=="object") return;
+      if(raw.profile && typeof raw.profile==="object"){
+        state.profile={...state.profile,...raw.profile};
+      }
+      if(Array.isArray(raw.records)){
+        state.records=raw.records.filter(r=>
+          r && typeof r==="object" &&
+          typeof r.date==="string" &&
+          Number.isFinite(Number(r.odometer)) &&
+          Number.isFinite(Number(r.litres)) &&
+          Number(r.litres)>0
+        ).slice(0,MAX_RECORDS);
+      }
+    }catch(e){
+      console.warn("Could not load saved fuel data.");
+    }
+  }
+
+  function saveState(){
+    try{
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+      return true;
+    }catch(e){
+      setStatus("formStatus","Could not save data. Export a backup and check browser storage.","error");
+      return false;
+    }
+  }
+
+  function syncProfileForm(){
+    $("vehicleName").value=state.profile.name||"";
+    $("vehicleType").value=state.profile.type||"Motorcycle";
+    $("fuelType").value=state.profile.fuel||"Petrol";
+    $("startOdo").value=state.profile.startOdo??"";
+    $("currency").value=state.profile.currency||"INR";
+  }
+
+  function readProfile(){
+    return {
+      name:$("vehicleName").value.trim().slice(0,80),
+      type:$("vehicleType").value,
+      fuel:$("fuelType").value,
+      startOdo:$("startOdo").value,
+      currency:$("currency").value
+    };
+  }
+
+  function saveProfile(){
+    const start=numeric($("startOdo").value);
+    if($("startOdo").value!=="" && (start===null || start<0)){
+      setStatus("profileStatus","Enter a valid starting odometer reading.","error");
+      return;
+    }
+    state.profile=readProfile();
+    saveState();
+    renderAll();
+    setStatus("profileStatus","Vehicle profile saved.","success");
+  }
+
+  function orderedRecords(){
+    return [...state.records].sort((a,b)=>
+      a.odometer-b.odometer || a.date.localeCompare(b.date)
+    );
+  }
+
+  function enrichRecords(){
+    const records=orderedRecords();
+    let previousFull=null;
+    return records.map(record=>{
+      const item={...record,mileage:null,distance:null};
+      if(record.fullTank){
+        if(previousFull && record.odometer>previousFull.odometer){
+          item.distance=record.odometer-previousFull.odometer;
+          item.mileage=item.distance/record.litres;
+        }
+        previousFull=record;
+      }
+      return item;
+    });
+  }
+
+  function addRecord(event){
+    event.preventDefault();
+    const date=$("fillDate").value;
+    const odometer=numeric($("odometer").value);
+    const litres=numeric($("litres").value);
+    const price=numeric($("price").value);
+    const amountInput=$("fillAmount").value;
+    const enteredAmount=numeric(amountInput);
+    const amount=amountInput.trim()==="" ? litres*price : enteredAmount;
+    const fullTank=$("fullTank").checked;
+
+    if(!date || odometer===null || odometer<0 || litres===null || litres<=0 ||
+       price===null || price<0 || amount===null || amount<0){
+      setStatus("formStatus","Check the date, odometer, fuel quantity, price, and total paid.","error");
+      return;
+    }
+    if(state.records.length>=MAX_RECORDS){
+      setStatus("formStatus","Record limit reached. Export a backup before clearing old records.","error");
+      return;
+    }
+
+    if(state.records.some(r=>Math.abs(r.odometer-odometer)<0.0001)){
+      if(!confirm("A fuel record already exists at this odometer reading. Add another anyway?")) return;
+    }
+    const latest=state.records.reduce((m,r)=>Math.max(m,Number(r.odometer)||0),0);
+    if(state.records.length && odometer<latest){
+      if(!confirm("This odometer reading is lower than an existing record. Check for a typo or confirm to continue.")) return;
+    }
+
+    const record={
+      id:uid(),date,odometer,litres,price,amount,
+      station:$("fillStation").value.trim().slice(0,100),
+      fullTank,
+      fuel:state.profile.fuel
+    };
+    state.records.push(record);
+    state.records=state.records.slice(-MAX_RECORDS);
+    saveState();
+    $("fuelForm").reset();
+    $("fillDate").value=today();
+    $("fullTank").checked=true;
+    renderAll();
+    setStatus("formStatus","Fuel record saved.","success");
+  }
+
+  function removeRecord(id){
+    const record=state.records.find(r=>r.id===id);
+    if(!record) return;
+    if(!confirm("Delete this fuel record?")) return;
+    state.records=state.records.filter(r=>r.id!==id);
+    saveState();
+    renderAll();
+  }
+
+  function renderStats(){
+    const records=enrichRecords();
+    const validMileage=records.filter(r=>r.mileage!==null);
+    const totalSpend=state.records.reduce((sum,r)=>sum+(Number(r.amount)||0),0);
+    const totalLitres=state.records.reduce((sum,r)=>sum+(Number(r.litres)||0),0);
+    const distances=validMileage.reduce((sum,r)=>sum+r.distance,0);
+    const mileageLitres=validMileage.reduce((sum,r)=>sum+r.litres,0);
+    const average=mileageLitres>0?distances/mileageLitres:null;
+
+    $("avgMileage").textContent=average===null?"—":number(average,2)+" km/L";
+    $("totalSpend").textContent=money(totalSpend);
+    $("totalLitres").textContent=number(totalLitres,2)+" L";
+    $("distanceTracked").textContent=distances>0?number(distances,1)+" km":"—";
+    $("costPerKm").textContent=distances>0?money(totalSpend/distances)+"/km":"—";
+
+    const latest=[...state.records].sort((a,b)=>b.date.localeCompare(a.date)||b.odometer-a.odometer)[0];
+    $("latestPrice").textContent=latest?money(latest.price)+"/L":"—";
+    $("recordCount").textContent=state.records.length+" RECORD"+(state.records.length===1?"":"S");
+    $("summaryName").textContent=state.profile.name||"Not set";
+    $("summaryFuel").textContent=state.profile.fuel||"Petrol";
+    const maxOdo=state.records.reduce((m,r)=>Math.max(m,Number(r.odometer)||0),numeric(state.profile.startOdo)||0);
+    $("summaryOdo").textContent=state.records.length||state.profile.startOdo!==""?number(maxOdo,1)+" km":"—";
+    $("summaryFills").textContent=String(state.records.length);
+
+    renderPriceChart();
+  }
+
+  function renderPriceChart(){
+    const area=$("priceChart");
+    area.replaceChildren();
+    const records=[...state.records].sort((a,b)=>a.date.localeCompare(b.date)).slice(-7);
+    if(!records.length){
+      area.innerHTML='<div class="empty">Add fuel records to see prices here.</div>';
+      return;
+    }
+    const max=Math.max(...records.map(r=>Number(r.price)||0),0.01);
+    records.forEach(r=>{
+      const row=document.createElement("div");
+      row.className="bar-row";
+      const date=document.createElement("div");
+      date.className="bar-label";
+      date.textContent=r.date;
+      const track=document.createElement("div");
+      track.className="bar-track";
+      const fill=document.createElement("div");
+      fill.className="bar-fill";
+      fill.style.width=Math.max(2,(Number(r.price)/max)*100)+"%";
+      track.appendChild(fill);
+      const value=document.createElement("div");
+      value.className="bar-value";
+      value.textContent=money(Number(r.price));
+      row.append(date,track,value);
+      area.appendChild(row);
+    });
+  }
+
+  function renderHistory(){
+    const area=$("historyArea");
+    area.replaceChildren();
+    const records=enrichRecords().sort((a,b)=>b.date.localeCompare(a.date)||b.odometer-a.odometer);
+    if(!records.length){
+      area.innerHTML='<div class="empty">No fuel records yet. Add your first fill-up above.</div>';
+      return;
+    }
+
+    const wrap=document.createElement("div");
+    wrap.className="table-wrap";
+    const table=document.createElement("table");
+    const thead=document.createElement("thead");
+    const head=document.createElement("tr");
+    ["Date","Odometer","Fuel","Price / L","Total","Mileage","Action"].forEach(label=>{
+      const th=document.createElement("th");
+      th.textContent=label;
+      head.appendChild(th);
+    });
+    thead.appendChild(head);
+    const tbody=document.createElement("tbody");
+
+    records.forEach(r=>{
+      const tr=document.createElement("tr");
+      const values=[
+        r.date,
+        number(r.odometer,1)+" km",
+        number(r.litres,2)+" L",
+        money(Number(r.price)),
+        money(Number(r.amount)),
+        r.mileage!==null?number(r.mileage,2)+" km/L":(r.fullTank?"Baseline":"Partial fill"),
+        ""
+      ];
+      values.forEach((value,index)=>{
+        const td=document.createElement("td");
+        if(index!==6){
+          td.textContent=value;
+        }else{
+          const btn=document.createElement("button");
+          btn.type="button";
+          btn.className="btn btn-small btn-danger no-print";
+          btn.textContent="Delete";
+          btn.addEventListener("click",()=>removeRecord(r.id));
+          td.appendChild(btn);
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    table.append(thead,tbody);
+    wrap.appendChild(table);
+    area.appendChild(wrap);
+  }
+
+  function renderAll(){
+    renderStats();
+    renderHistory();
+  }
+
+  function csvEscape(value){
+    const s=String(value??"");
+    return '"'+s.replace(/"/g,'""')+'"';
+  }
+
+  function downloadBlob(blob,filename){
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url;
+    link.download=filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+
+  function slug(value){
+    return (value||"vehicle").toLowerCase()
+      .replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,50)||"vehicle";
+  }
+
+  function exportCsv(){
+    const records=enrichRecords().sort((a,b)=>a.date.localeCompare(b.date)||a.odometer-b.odometer);
+    if(!records.length){
+      setStatus("backupStatus","Add a fuel record before exporting.","error");
+      return;
+    }
+    const header=["Date","Vehicle","Vehicle Type","Fuel Type","Odometer (km)","Fuel Added (L)","Price per Unit","Total Paid","Full Tank","Distance Since Previous Full Tank (km)","Estimated Mileage (km/L)","Station / Note","Currency"];
+    const rows=records.map(r=>[
+      r.date,state.profile.name,state.profile.type,r.fuel||state.profile.fuel,
+      r.odometer,r.litres,r.price,r.amount,r.fullTank?"Yes":"No",
+      r.distance??"",r.mileage===null?"":r.mileage,r.station,state.profile.currency
+    ]);
+    const csv=[header,...rows].map(row=>row.map(csvEscape).join(",")).join("\r\n");
+    downloadBlob(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}),slug(state.profile.name)+"-fuel-records.csv");
+    setStatus("backupStatus","CSV exported.","success");
+  }
+
+  function exportJson(){
+    const backup={
+      app:"OTXS Fuel Tracker",
+      version:1,
+      exportedAt:new Date().toISOString(),
+      data:state
+    };
+    downloadBlob(new Blob([JSON.stringify(backup,null,2)],{type:"application/json"}),slug(state.profile.name)+"-fuel-backup.json");
+    setStatus("backupStatus","JSON backup exported.","success");
+  }
+
+  async function importJson(){
+    const file=$("importJson").files?.[0];
+    if(!file){
+      setStatus("backupStatus","Choose a JSON backup file first.","error");
+      return;
+    }
+    if(file.size>5*1024*1024){
+      setStatus("backupStatus","File is too large. Maximum size is 5 MB.","error");
+      return;
+    }
+    try{
+      const parsed=JSON.parse(await file.text());
+      const incoming=parsed.data||parsed;
+      if(!incoming || typeof incoming!=="object" || !Array.isArray(incoming.records)){
+        throw new Error("This file does not look like an OTXS Fuel Tracker backup.");
+      }
+      if(incoming.records.length>MAX_RECORDS) throw new Error("Too many records in backup.");
+      const cleaned=incoming.records.map(r=>{
+        if(!r || typeof r.date!=="string" ||
+          !Number.isFinite(Number(r.odometer)) || Number(r.odometer)<0 ||
+          !Number.isFinite(Number(r.litres)) || Number(r.litres)<=0 ||
+          !Number.isFinite(Number(r.price)) || Number(r.price)<0 ||
+          !Number.isFinite(Number(r.amount)) || Number(r.amount)<0){
+          throw new Error("A record in this backup has invalid values.");
+        }
+        return {
+          id:uid(),date:r.date.slice(0,10),odometer:Number(r.odometer),
+          litres:Number(r.litres),price:Number(r.price),amount:Number(r.amount),
+          station:typeof r.station==="string"?r.station.slice(0,100):"",
+          fullTank:Boolean(r.fullTank),
+          fuel:typeof r.fuel==="string"?r.fuel.slice(0,30):"Petrol"
+        };
+      });
+      if(!confirm("Replace your current vehicle profile and fuel records with "+cleaned.length+" imported records? Export your current data first if you want to keep it.")) return;
+
+      const p=incoming.profile||{};
+      state={
+        profile:{
+          name:typeof p.name==="string"?p.name.slice(0,80):"",
+          type:["Motorcycle","Scooter","Car","SUV","Other"].includes(p.type)?p.type:"Motorcycle",
+          fuel:["Petrol","Diesel","CNG","Electric","Other"].includes(p.fuel)?p.fuel:"Petrol",
+          startOdo:p.startOdo??"",
+          currency:Object.hasOwn(symbols,p.currency)?p.currency:"INR"
+        },
+        records:cleaned
+      };
+      syncProfileForm();
+      saveState();
+      renderAll();
+      setStatus("backupStatus","Backup imported successfully.","success");
+      $("importJson").value="";
+    }catch(e){
+      setStatus("backupStatus",e.message||"Could not import backup.","error");
+    }
+  }
+
+  $("saveVehicle").addEventListener("click",saveProfile);
+  $("fuelForm").addEventListener("submit",addRecord);
+  $("exportCsv").addEventListener("click",exportCsv);
+  $("exportJson").addEventListener("click",exportJson);
+  $("printBtn").addEventListener("click",()=>window.print());
+  $("importBtn").addEventListener("click",importJson);
+
+  $("clearBtn").addEventListener("click",()=>{
+    if(!confirm("Delete ALL vehicle details and fuel records from this browser? Export a backup first if needed.")) return;
+    state={
+      profile:{name:"",type:"Motorcycle",fuel:"Petrol",startOdo:"",currency:"INR"},
+      records:[]
+    };
+    saveState();
+    syncProfileForm();
+    renderAll();
+    setStatus("backupStatus","All records deleted.","success");
+  });
+
+  $("currency").addEventListener("change",()=>{
+    state.profile.currency=$("currency").value;
+    saveState();
+    renderAll();
+  });
+
+  loadState();
+  syncProfileForm();
+  $("fillDate").value=today();
+  renderAll();
+})();
+</script>
+</body>
+</html>
+
